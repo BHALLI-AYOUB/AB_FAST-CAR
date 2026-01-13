@@ -1,0 +1,590 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { BookingModal } from "@/components/booking-modal"
+import { ChevronLeft, ChevronRight, Sparkles, Zap, Shield } from "lucide-react"
+
+const translations = {
+  fr: {
+    title: "Notre Flotte",
+    titleGradient: "Exceptionnelle",
+    subtitle: "Découvrez notre sélection de véhicules de luxe",
+    perDay: "/jour",
+    book: "Réserver",
+    explore: "Explorer",
+    vehicles: [
+      {
+        name: "Mercedes G63",
+        category: "Ultra Luxe SUV",
+        year: "2025",
+        price: 8000,
+        images: [
+          "/G63-2025.png",
+          "/G63FULLBLACK.jpeg",
+          "/G63-20253.png"
+        ],
+        features: ["Full Options", "Noir Mat", "V8 Biturbo"],
+      },
+      {
+        name: "Porsche Cayenne",
+        category: "Sport SUV",
+        year: "2025",
+        price: 3500,
+        images: [
+          "/A.png",
+          "/B.png",
+          "/C.png"
+        ],
+        features: ["Full Options", "Noir", "Turbo"],
+      },
+      {
+        name: "Range Rover Sport Dynamic SE 2025",
+        category: "SUV Prestige",
+        year: "2025",
+        price: 2999,
+        images: [
+          "/range-rover-sport-dynamic2.jpeg",
+          "/range-rover-sport-dynamic3.jpeg",
+          "/1R.png.jpeg"
+        ],
+        features: ["Full Options", "Full Black", "4x4"],
+      },
+      {
+        name: "Porsche Macan T 2025",
+        category: "Sport SUV",
+        year: "2025",
+        price: 1999,
+        images: [
+          "/porsche-macan-t-2025-1.jpeg",
+          "/porsche-macan-t-2025-2.jpeg",
+          "/porsche-macan-t-2025-3.jpeg"
+        ],
+        features: ["Full Options", "Gris Nardo", "Sport"],
+      },
+      {
+        name: "Porsche macan 2025",
+        category: "Sport SUV",
+        year: "2025",
+        price: 2300,
+        images: [
+          "/porche-macan20251.jpeg",
+          "/porche-macan20252.jpeg",
+          "/porche-macan20253.jpeg"
+        ],
+        features: ["Full Options", "Noir", "Performance"],
+      },
+      {
+        name: "Volkswagen Touareg",
+        category: "SUV Luxe",
+        year: "2025",
+        price: 1399,
+        images: [
+          "/volkswagen%20touareg1.jpg",
+          "/volkswagentouareg2.jpg",
+          "/volkswagen%20touareg3.jpeg"
+        ],
+        features: ["Full Options", "Noir", "4x4"],
+      },
+      {
+        name: "Range Rover Evoque Dynamic SE 2025",
+        category: "SUV Compact",
+        year: "2025",
+        price: 1299,
+        images: [
+          "/range-rover-evoque-dynamic1.jpeg",
+          "/range-rover-evoque-dynamic2.jpeg",
+          "/range-rover-evoque-dynamic3.jpeg"
+        ],
+        features: ["Full Options", "Gris Métallisé", "R-Dynamic"],
+      },
+      {
+        name: "Mercedes Classe A Pack AMG 2025",
+        category: "Berline Sport",
+        year: "2025",
+        price: 999,
+        images: [
+          "/Mercedes-classe-A-pack-amg-20251.jpeg",
+          "/Mercedes-classe-A-pack-amg-20252.jpeg",
+          "/Mercedes-classe-A-pack-amg-20253.jpeg"
+        ],
+        features: ["Pack AMG Line", "Gris Nardo", "Sport"],
+      },
+      {
+        name: "Audi A3 S-Line Berline",
+        category: "Berline Sport",
+        year: "2024",
+        price: 1200,
+        images: [
+          "/audi-a3-s-line-sedan-2024-turbo-blue-front.jpg",
+          "/audi-a3-s-line-sedan-2024-interior.jpg",
+          "/audi-a3-s-line-sedan-2024-side.jpg"
+        ],
+        features: ["Pack RS3", "Bleu Turbo", "S-Line"],
+      },
+      {
+        name: "Mercedes Vito 2025",
+        category: "Utilitaire",
+        year: "2025",
+        price: 1499,
+        images: [
+          "/Mercedes-Vito-20251.jpeg",
+          "/Mercedes-Vito-20252.jpeg",
+          "/Mercedes-Vito-20253.jpeg"
+        ],
+        features: ["Automatique", "Blanche", "Pratique"],
+      },
+      {
+        name: "Mercedes GLA 2025",
+        category: "SUV Compact",
+        year: "2025",
+        price: 1100,
+        images: [
+          "/Mercedes-GLA-20251.jpeg",
+          "/Mercedes-GLA-20252.jpeg",
+          "/Mercedes-GLA-20253.jpeg"
+        ],
+        features: ["Automatique", "Noire", "Économique"],
+      },
+      {
+        name: "Cupra Formentor",
+        category: "SUV Sport",
+        year: "2025",
+        price: 899,
+        images: [
+          "/Cupraformentor-20252.jpeg",
+          "/cupra-formentor-2025-grey-interior.jpg",
+          "/Cupraformentor.jpeg"
+        ],
+        features: ["Full Options", "Gris", "Performance"],
+      },
+      {
+        name: "Cupra Leon 2025",
+        category: "Berline Sport",
+        year: "2025",
+        price: 699,
+        images: [
+          "/Cupra-Leon-20251.jpeg",
+          "/Cupra-Leon-20252.jpeg",
+          "/cupra2025.jpeg"
+        ],
+        features: ["Full Options", "Gris", "Sport"],
+      },
+      {
+        name: "Clio 5 Automatique 2025",
+        category: "Citadine",
+        year: "2025",
+        price: 349,
+        images: [
+          "/Clio-5-automatique-20251.jpeg",
+          "/Clio-5-automatique-20252.jpeg",
+          "/Clio-5-automatique-20253.jpeg",
+          "/Clio-5-automatique-20254.jpeg"
+        ],
+        features: ["Automatique", "Blanche", "Économique"],
+      },
+    ],
+  },
+  en: {
+    title: "Our",
+    titleGradient: "Exceptional Fleet",
+    subtitle: "Discover our selection of luxury vehicles",
+    perDay: "/day",
+    book: "Book Now",
+    explore: "Explore",
+    vehicles: [
+  {
+        name: "Mercedes G63",
+        category: "Ultra Luxe SUV",
+        year: "2025",
+        price: 8000,
+        images: [
+          "/G63-2025.png",
+          "/G63FULLBLACK.jpeg",
+          "/G63-20253.png"
+        ],
+        features: ["Full Options", "Noir Mat", "V8 Biturbo"],
+      },
+      {
+        name: "Porsche Cayenne",
+        category: "Sport SUV",
+        year: "2025",
+        price: 3500,
+        images: [
+          "/A.png",
+          "/B.png",
+          "/C.png"
+        ],
+        features: ["Full Options", "Black", "Turbo"],
+      },
+      {
+        name: "Range Rover Sport",
+        category: "Prestige SUV",
+        year: "2025",
+        price: 2999,
+        images: [
+          "/range-rover-sport-dynamic2.jpeg",
+          "/range-rover-sport-dynamic3.jpeg",
+          "/1R.png.jpeg"
+        ],
+        features: ["Full Options", "Full Black", "4x4"],
+      },
+      {
+        name: "Porsche Macan T",
+        category: "Sport SUV",
+        year: "2025",
+        price: 1999,
+        images: [
+          "/porsche-macan-t-2025-1.jpeg",
+          "/porsche-macan-t-2025-2.jpeg",
+          "/porsche-macan-t-2025-3.jpeg"
+        ],
+        features: ["Full Options", "Nardo Grey", "Sport"],
+      },
+      {
+        name: "Porsche Macan 2025",
+        category: "Sport SUV",
+        year: "2025",
+        price: 2300,
+        images: [
+          "/porche-macan20251.jpeg",
+          "/porche-macan20252.jpeg",
+          "/porche-macan20253.jpeg"
+        ],
+        features: ["Full Options", "Black", "Performance"],
+      },
+      {
+        name: "Volkswagen Touareg",
+        category: "Luxury SUV",
+        year: "2025",
+        price: 1399,
+        images: [
+          "/volkswagen%20touareg1.jpg",
+          "/volkswagentouareg2.jpg",
+          "/volkswagen%20touareg3.jpeg"
+        ],
+        features: ["Full Options", "Black", "4x4"],
+      },
+      {
+        name: "Range Rover Evoque R-Dynamic",
+        category: "Compact SUV",
+        year: "2025",
+        price: 1299,
+        images: [
+          "/range-rover-evoque-dynamic1.jpeg",
+          "/range-rover-evoque-dynamic2.jpeg",
+          "/range-rover-evoque-dynamic3.jpeg"
+        ],
+        features: ["Full Options", "Metallic Grey", "R-Dynamic"],
+      },
+      {
+        name: "Mercedes Class A Pack AMG",
+        category: "Sport Sedan",
+        year: "2025",
+        price: 999,
+        images: [
+          "/Mercedes-classe-A-pack-amg-20251.jpeg",
+          "/Mercedes-classe-A-pack-amg-20252.jpeg",
+          "/Mercedes-classe-A-pack-amg-20253.jpeg"
+        ],
+        features: ["AMG Line Pack", "Nardo Grey", "Sport"],
+      },
+      {
+        name: "Audi A3 S-Line Sedan",
+        category: "Sport Sedan",
+        year: "2024",
+        price: 1200,
+        images: [
+          "/audi-a3-s-line-sedan-2024-turbo-blue-front.jpg",
+          "/audi-a3-s-line-sedan-2024-interior.jpg",
+          "/audi-a3-s-line-sedan-2024-side.jpg"
+        ],
+        features: ["RS3 Pack", "Turbo Blue", "S-Line"],
+      },
+      {
+        name: "Mercedes Vito 2025",
+        category: "Commercial",
+        year: "2025",
+        price: 1499,
+        images: [
+          "/Mercedes-Vito-20251.jpeg",
+          "/Mercedes-Vito-20252.jpeg",
+          "/Mercedes-Vito-20253.jpeg"
+        ],
+        features: ["Automatic", "White", "Practical"],
+      },
+      {
+        name: "Mercedes GLA 2025",
+        category: "Compact SUV",
+        year: "2025",
+        price: 1100,
+        images: [
+          "/Mercedes-GLA-20251.jpeg",
+          "/Mercedes-GLA-20252.jpeg",
+          "/Mercedes-GLA-20253.jpeg"
+        ],
+        features: ["Automatic", "Black", "Economical"],
+      },
+      {
+        name: "Cupra Formentor",
+        category: "Sport SUV",
+        year: "2025",
+        price: 899,
+        images: [
+          "/Cupraformentor-20252.jpeg",
+          "/cupra-formentor-2025-grey-interior.jpg",
+          "/Cupraformentor.jpeg"
+        ],
+        features: ["Full Options", "Grey", "Performance"],
+      },
+      {
+        name: "Cupra Leon",
+        category: "Sport Sedan",
+        year: "2025",
+        price: 699,
+        images: [
+          "/Cupra-Leon-20251.jpeg",
+          "/Cupra-Leon-20252.jpeg",
+          "/cupra2025.jpeg"
+        ],
+        features: ["Full Options", "Grey", "Sport"],
+      },
+      {
+        name: "Renault Clio 5 Automatic",
+        category: "City Car",
+        year: "2025",
+        price: 349,
+        images: [
+          "/Clio-5-automatique-20251.jpeg",
+          "/Clio-5-automatique-20252.jpeg",
+          "/Clio-5-automatique-20253.jpeg",
+          "/Clio-5-automatique-20254.jpeg"
+        ],
+        features: ["Automatic", "White", "Economical"],
+      },
+    ],
+  },
+}
+
+export function FleetSection({ language }: { language: "fr" | "en" }) {
+  const t = translations[language]
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedVehicle, setSelectedVehicle] = useState<(typeof t.vehicles)[0] | null>(null)
+  const [currentImageIndices, setCurrentImageIndices] = useState<Record<number, number>>({})
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndices((prev) => {
+        const newIndices: Record<number, number> = {}
+        t.vehicles.forEach((vehicle, index) => {
+          const currentIndex = prev[index] || 0
+          newIndices[index] = (currentIndex + 1) % vehicle.images.length
+        })
+        return newIndices
+      })
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [t.vehicles])
+
+  const handleBooking = (vehicle: (typeof t.vehicles)[0]) => {
+    setSelectedVehicle(vehicle)
+    setIsModalOpen(true)
+  }
+
+  const nextImage = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setCurrentImageIndices(prev => ({
+      ...prev,
+      [index]: ((prev[index] || 0) + 1) % t.vehicles[index].images.length
+    }))
+  }
+
+  const prevImage = (index: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setCurrentImageIndices(prev => ({
+      ...prev,
+      [index]: ((prev[index] || 0) - 1 + t.vehicles[index].images.length) % t.vehicles[index].images.length
+    }))
+  }
+
+  return (
+    <section id="fleet" className="py-32 relative overflow-hidden bg-gradient-to-b from-black via-zinc-950 to-black">
+      {/* Animated background effects */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header with stunning animation */}
+        <div className="text-center mb-24">
+          <div className="inline-flex items-center gap-2 mb-6 px-6 py-3 rounded-full bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 backdrop-blur-sm">
+            <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
+            <span className="text-yellow-400 font-bold text-sm tracking-wider uppercase">Premium Collection</span>
+            <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
+          </div>
+          
+          <h2 className="text-6xl md:text-8xl font-black mb-6 tracking-tight">
+            <span className="bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">{t.title}</span>
+            <br />
+            <span className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 bg-clip-text text-transparent animate-gradient">
+              {t.titleGradient}
+            </span>
+          </h2>
+          
+          <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl mx-auto font-light">
+            {t.subtitle}
+          </p>
+        </div>
+
+        {/* Premium grid layout */}
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {t.vehicles.map((vehicle, index) => (
+            <Card
+              key={index}
+              className="group relative overflow-hidden bg-gradient-to-br from-zinc-900/50 to-black border border-zinc-800/50 hover:border-yellow-500/50 transition-all duration-700 rounded-3xl backdrop-blur-sm"
+              onMouseEnter={() => setHoveredCard(index)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                transform: hoveredCard === index ? 'translateY(-8px)' : 'translateY(0)',
+                boxShadow: hoveredCard === index ? '0 25px 50px -12px rgba(234, 179, 8, 0.25)' : 'none'
+              }}
+            >
+              {/* Glowing edge effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 via-transparent to-amber-500/20 blur-xl"></div>
+              </div>
+
+              {/* Image container with navigation */}
+              <div className="relative overflow-hidden h-72 bg-gradient-to-br from-zinc-900 to-zinc-950">
+                <img
+                  src={vehicle.images[currentImageIndices[index] || 0] || "/placeholder.svg"}
+                  alt={vehicle.name}
+                  className="w-full h-full object-contain transition-all duration-700 group-hover:scale-110"
+                />
+                
+                {/* Gradient overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Navigation arrows */}
+                {vehicle.images.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => prevImage(index, e)}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-yellow-500 hover:border-yellow-500"
+                    >
+                      <ChevronLeft className="w-5 h-5 text-white" />
+                    </button>
+                    <button
+                      onClick={(e) => nextImage(index, e)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-yellow-500 hover:border-yellow-500"
+                    >
+                      <ChevronRight className="w-5 h-5 text-white" />
+                    </button>
+                  </>
+                )}
+
+                {/* Image indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                  {vehicle.images.map((_, imgIndex) => (
+                    <div
+                      key={imgIndex}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        (currentImageIndices[index] || 0) === imgIndex
+                          ? 'w-8 bg-yellow-400'
+                          : 'w-1.5 bg-white/30'
+                      }`}
+                    />
+                  ))}
+                </div>
+                
+                {/* Year badge with glow */}
+                <Badge className="absolute top-6 left-6 bg-black/80 backdrop-blur-md text-white border border-yellow-500/30 font-bold px-4 py-2 text-sm shadow-lg shadow-yellow-500/20">
+                  <Zap className="w-3 h-3 mr-1 inline text-yellow-400" />
+                  {vehicle.year}
+                </Badge>
+                
+                {/* Category badge with gradient */}
+                <Badge className="absolute top-6 right-6 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-black border-0 font-black px-5 py-2.5 text-xs rounded-full shadow-xl tracking-wider uppercase">
+                  {vehicle.category}
+                </Badge>
+              </div>
+
+              {/* Content section with premium styling */}
+              <div className="p-8">
+                <h3 className="text-2xl font-black text-white mb-4 tracking-tight group-hover:text-yellow-400 transition-colors duration-300">
+                  {vehicle.name}
+                </h3>
+                
+                {/* Features with icons */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {vehicle.features.map((feature, i) => (
+                    <Badge
+                      key={i}
+                      className="bg-zinc-900/80 backdrop-blur-sm text-zinc-300 border border-zinc-700/50 text-xs px-4 py-2 rounded-lg font-medium hover:border-yellow-500/50 hover:text-yellow-400 transition-all duration-300"
+                    >
+                      {feature}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Price and CTA section */}
+                <div className="flex items-end justify-between pt-6 border-t border-zinc-800/50">
+                  <div className="space-y-1">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-black bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                        {vehicle.price}
+                      </span>
+                      <span className="text-lg text-zinc-500 font-bold">DH</span>
+                    </div>
+                    <div className="text-sm text-zinc-500 font-medium">
+                      {t.perDay}
+                    </div>
+                  </div>
+                  
+                  <Button
+                    onClick={() => handleBooking(vehicle)}
+                    className="relative bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-500 hover:via-amber-500 hover:to-yellow-600 text-black font-black px-8 py-6 rounded-2xl shadow-2xl shadow-yellow-500/30 transition-all duration-300 hover:scale-105 hover:shadow-yellow-500/50 group/btn overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      {t.book}
+                      <Shield className="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-300" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"></div>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Corner accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {selectedVehicle && (
+        <BookingModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          vehicle={selectedVehicle}
+          language={language}
+        />
+      )}
+
+      <style jsx>{`
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 3s ease infinite;
+        }
+      `}</style>
+    </section>
+  )
+}
